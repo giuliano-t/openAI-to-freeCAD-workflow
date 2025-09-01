@@ -1,0 +1,143 @@
+[
+  {
+    "operation": "Create a solid box whose dimensions are 10, 20 and 30",
+    "code": "length = 10\nwidth = 20\nheight = 30\nmy_box = Part.makeBox(length, width, height)"
+  },
+  {
+    "operation": "Create a solid sphere of radius equals to 15",
+    "code": "radius = 15\nmy_sphere = Part.makeSphere(radius)"
+  },
+  {
+    "operation": "Create a hollow cylinder aligned along the Z-axis, with inner radius 10, outer radius 8 and height 50",
+    "code": "outer_radius = 10\ninner_radius = 8\nheight = 50\nouter_cyl = Part.makeCylinder(outer_radius, height)\ninner_cyl = Part.makeCylinder(inner_radius, height)\nhollow_cyl = outer_cyl.cut(inner_cyl)"
+  },
+  {
+    "operation": "Translate an object along the X-axis by 50",
+    "code": "import FreeCAD as App\nvec = App.Vector(50, 0, 0)\nplacement = App.Placement(vec, App.Rotation(0, 0, 0))\nmy_shape.Placement = placement.multiply(my_shape.Placement)"
+  },
+  {
+    "operation": "Translate an object along the Y-axis by 30",
+    "code": "import FreeCAD as App\nvec = App.Vector(0, 30, 0)\nplacement = App.Placement(vec, App.Rotation(0, 0, 0))\nmy_shape.Placement = placement.multiply(my_shape.Placement)"
+  },
+  {
+    "operation": "Translate an object along the Z-axis by 20",
+    "code": "import FreeCAD as App\nvec = App.Vector(0, 0, 20)\nplacement = App.Placement(vec, App.Rotation(0, 0, 0))\nmy_shape.Placement = placement.multiply(my_shape.Placement)"
+  },
+  {
+    "operation": "Move an object to an absolute coordinate (10, 20, 30)",
+    "code": "import FreeCAD as App\nvec = App.Vector(10, 20, 30)\nplacement = App.Placement(vec, App.Rotation(0, 0, 0))\nmy_shape.Placement = placement"
+  },
+  {
+    "operation": "Rotation convention: In FreeCAD, rotations use the right-hand rule. Positive angles mean counterclockwise rotation, negative angles mean clockwise rotation.",
+    "code": "# Convention only, no executable code"
+  },
+  {
+    "operation": "Rotate an object 45 degrees around the X-axis, counterclockwise",
+    "code": "my_shape.rotate(App.Vector(0,0,0), App.Vector(1,0,0), 45)"
+  },
+  {
+    "operation": "Rotate an object 90 degrees around the Y-axis, counterclockwise",
+    "code": "my_shape.rotate(App.Vector(0,0,0), App.Vector(0,1,0), 90)"
+  },
+  {
+    "operation": "Rotate an object 30 degrees around the Z-axis, counterclockwise",
+    "code": "my_shape.rotate(App.Vector(0,0,0), App.Vector(0,0,1), 30)"
+  },
+  {
+    "operation": "Rotate an object 45 degrees around the X-axis, clockwise",
+    "code": "my_shape.rotate(App.Vector(0,0,0), App.Vector(1,0,0), -45)"
+  },
+  {
+    "operation": "Rotate an object 90 degrees around the Y-axis, clockwise",
+    "code": "my_shape.rotate(App.Vector(0,0,0), App.Vector(0,1,0), -90)"
+  },
+  {
+    "operation": "Rotate an object 30 degrees around the Z-axis, clockwise",
+    "code": "my_shape.rotate(App.Vector(0,0,0), App.Vector(0,0,1), -30)"
+  },
+  {
+    "operation": "Cut a hole in a solid using a cylinder at height Z=5",
+    "code": "hole = Part.makeCylinder(radius, length, App.Vector(0, 0, 5), App.Vector(1, 0, 0))\ncut_result = base_shape.cut(hole)"
+  },
+  {
+    "operation": "Subtract one cylinder from another (boolean cut)",
+    "code": "cut_result = cylinder1.cut(cylinder2)"
+  },
+  {
+    "operation": "Fuse two objects together (boolean union)",
+    "code": "fused_shape = shape1.fuse(shape2)"
+  },
+  {
+    "operation": "Add a shape to the FreeCAD document and recompute",
+    "code": "doc = App.activeDocument()\nobj = doc.addObject(\"Part::Feature\", \"MyPart\")\nobj.Shape = my_shape\nGui.activeDocument().recompute()"
+  },
+  {
+    "operation": "Creating a hole through a shape along the X-axis at a specific height on the Z-axis.",
+    "code": "height_z = 7.0\n# The POSITION vector's Z-component defines the height.\n# The DIRECTION vector's X-component makes it parallel to the X-axis.\nhole_tool = Part.makeCylinder(radius, length, App.Vector(0, 0, height_z), App.Vector(1, 0, 0))"
+  },
+  {
+    "operation": "Creating a hole through a shape along the Y-axis at a specific height on the Z-axis.",
+    "code": "height_z = 5.0\n# The POSITION vector's Z-component defines the height.\n# The DIRECTION vector's Y-component makes it parallel to the Y-axis.\nhole_tool = Part.makeCylinder(radius, length, App.Vector(0, 0, height_z), App.Vector(0, 1, 0))"
+  },
+  {
+    "operation": "General principle for making holes in a cylinder aligned with the Z-axis.",
+      "code": "# To make a hole, create a new cylinder to use as a cutting tool.\n# The position vector App.Vector(x, y, z) places the center of the cutting tool.\n# The direction vector App.Vector(dx, dy, dz) sets its orientation."
+  },
+  {
+    "operation": "Advanced: Applying fillets to the intersection of multiple parts.",
+    "code": "common_edges = part1.getCommonEdges(part2)\nassembly = part1.fuse(part2)\nedges_to_fillet_indices = [assembly.findSubShape(edge)[0].index for edge in common_edges]\nfilleted_assembly = assembly.makeFillet(radius, assembly.Edges, edges_to_fillet_indices)"
+  },
+  {
+    "operation": "Advanced: Apply fillets only along the seam where two solids (part1, part2) intersect, headless mode.",
+    "code": "import Part\n\n# Compute seam curve (intersection)\nsection = part1.section(part2)\nassembly = part1.fuse(part2)\n\n# Find seam edges by proximity to section geometry\nTol = 1e-6\nseam_edges = [e for e in assembly.Edges if e.distToShape(section)[0] < Tol]\n\n# Apply fillet\nfilleted_assembly = assembly.makeFillet(radius, seam_edges)"
+  },
+  {
+    "operation": "Advanced: Fuse a list of solids and fillet all seams where they intersect, headless mode.",
+    "code": "import Part\n\nparts = parts  # list of Part.Shape objects (e.g. [p0, p1, p2])\nradius = radius\nTol = 1e-6\n\n# Collect seam curves\nacc_section = None\nassembly = parts[0]\nfor p in parts[1:]:\n    sec = assembly.section(p)\n    acc_section = sec if acc_section is None else acc_section.fuse(sec)\n    assembly = assembly.fuse(p)\n\n# Detect seam edges and fillet them\nseam_edges = [e for e in assembly.Edges if e.distToShape(acc_section)[0] < Tol]\nfilleted_assembly = assembly.makeFillet(radius, seam_edges)"
+  },
+  {
+    "operation": "Create a cone with base radius 10, top radius 5 and height 20",
+    "code": "my_cone = Part.makeCone(10, 5, 20)"
+  },
+  {
+    "operation": "Create a torus with radius 10 and tube radius 2",
+    "code": "my_torus = Part.makeTorus(10, 2)"
+  },
+  {
+    "operation": "Scale an object by factors along X, Y, Z",
+    "code": "scale_matrix = App.Matrix()\nscale_matrix.scale(2.0, 1.5, 1.0)\nscaled_shape = my_shape.transformGeometry(scale_matrix)"
+  },
+  {
+    "operation": "Mirror an object across the YZ plane",
+    "code": "mirror_plane = App.Vector(1,0,0)\nmirrored_shape = my_shape.mirror(App.Vector(0,0,0), mirror_plane)"
+  },
+  {
+    "operation": "Compute the intersection (boolean common) of two shapes",
+    "code": "common_shape = shape1.common(shape2)"
+  },
+  {
+    "operation": "Apply chamfers to all edges of a shape with radius 2",
+    "code": "chamfered_shape = my_shape.makeChamfer(2, my_shape.Edges)"
+  },
+  {
+    "operation": "Apply variable radius fillets to selected edges",
+    "code": "radii_map = {edge: (2,3) for edge in my_shape.Edges}\nfilleted_shape = my_shape.makeFillet(radii_map)"
+  },
+  {
+    "operation": "Create a linear array of an object along the X axis, with 5 copies spaced 10 units apart",
+    "code": "copies = [my_shape.copy() for _ in range(5)]\nfor i, c in enumerate(copies):\n    c.translate(App.Vector(i*10,0,0))\narray = copies[0]\nfor c in copies[1:]:\n    array = array.fuse(c)"
+  },
+  {
+    "operation": "Create a circular array of an object around the Z axis with 8 copies",
+    "code": "import math\ncopies = []\nfor i in range(8):\n    angle = i * 360/8\n    c = my_shape.copy()\n    c.rotate(App.Vector(0,0,0), App.Vector(0,0,1), angle)\n    copies.append(c)\narray = copies[0]\nfor c in copies[1:]:\n    array = array.fuse(c)"
+  },
+  {
+    "operation": "Get the bounding box of a shape",
+    "code": "bbox = my_shape.BoundBox\nprint(bbox.XLength, bbox.YLength, bbox.ZLength)"
+  },
+  {
+    "operation": "Measure distance between two vertices",
+    "code": "import math\nv1, v2 = my_shape.Vertexes[0].Point, my_shape.Vertexes[1].Point\ndist = v1.distanceToPoint(v2)"
+  }
+]
+
