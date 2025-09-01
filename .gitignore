@@ -1,0 +1,27 @@
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Generated output from the notebook
+# These folders are created at runtime
+/scripts/
+/models/
+
+# Environment variables
+# Never commit your API keys or other secrets!
+.env
+.env.*
+!.env.example
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE configuration
+.idea/
+.vscode/
